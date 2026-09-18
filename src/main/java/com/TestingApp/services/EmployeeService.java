@@ -1,13 +1,12 @@
 package com.TestingApp.services;
 
-import com.TestingApp.repositories.EmployeeRepository;
+import com.TestingApp.dto.EmployeeDTO;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeService {
-    private  final EmployeeRepository employeeRepository;
-
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+public interface EmployeeService {
+    EmployeeDTO getEmployeeById(Long id);
+    EmployeeDTO createNewEmployee(EmployeeDTO employeeDTO);
+    EmployeeDTO updateEmployee(Long id,EmployeeDTO employeeDTO);
+    void deleteEmployee(Long id);
 }
