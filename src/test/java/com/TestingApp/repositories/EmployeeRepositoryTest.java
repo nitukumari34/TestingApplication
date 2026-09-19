@@ -1,12 +1,14 @@
 package com.TestingApp.repositories;
 
 import com.TestingApp.entities.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -17,23 +19,43 @@ class EmployeeRepositoryTest {
 // because Spring manages the test instance and injects the required bean.
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    //create employee
+    private  Employee employee;
+    @BeforeEach
+    void setUp() {
+        employee = Employee.builder()
+                .name("Nitu")
+                .email("nituspj032001@gmail.com")
+                .salary(50000L)
+                .build();
+    }
     @Test
-    void testFindByEmail_whenEmailIsValid_thenReturnEmployee() {
-        Employee employee = new Employee(null, "test@example.com", "John Doe", 50000.0);
+    void testFindByEmail_whenEmailIsPresent_thenReturnEmployee() {
+        //Arrange,Given
         employeeRepository.save(employee);
 
-        List<Employee> employees = employeeRepository.findByEmail("test@example.com");
+        //Act,When
+        List<Employee>employeeList=employeeRepository.findByEmail(employee.getEmail());
 
-        assertFalse(employees.isEmpty());
-        assertEquals(1, employees.size());
-        assertEquals("test@example.com", employees.get(0).getEmail());
+
+        //Assert, Then
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList).isNotEmpty();
+        assertThat(employeeList.get(0).getEmail()).isEqualTo(employee.getEmail());
+
     }
 
     @Test
     void testFindByEmail_whenEmailIsNotFound_thenReturnEmptyEmployeeList() {
-        List<Employee> employees = employeeRepository.findByEmail("notfound@example.com");
+//       Given
+        String email= "isNotPresent@gmail.com";
 
-        assertNotNull(employees);
-        assertTrue(employees.isEmpty());
+//        When
+        List<Employee>employeeList=employeeRepository.findByEmail(email);
+//        Then
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList).isEmpty();
+
     }
 }
