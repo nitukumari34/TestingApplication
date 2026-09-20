@@ -37,10 +37,10 @@ public class EmployeeServiceImp implements  EmployeeService{
     @Override
     public EmployeeDTO createNewEmployee(EmployeeDTO employeeDTO) {
          log.info("Creating employee with email : {}", employeeDTO.getEmail());
-        List<Employee>existingEmployees=employeeRepository.findByEmail(employeeDTO.getEmail());
-        if(existingEmployees.isEmpty()){
+        List<Employee> existingEmployees = employeeRepository.findByEmail(employeeDTO.getEmail());
+        if (!existingEmployees.isEmpty()) {
             log.info("Employee already exist with email : " + employeeDTO.getEmail());
-            throw  new RuntimeException("Employee already exist with email: "+employeeDTO.getEmail());
+            throw new RuntimeException("Employee already exist with email: " + employeeDTO.getEmail());
         }
 
         Employee newEmployee=modelMapper.map(employeeDTO,Employee.class);
