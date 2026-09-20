@@ -6,6 +6,7 @@ import com.TestingApp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -66,8 +67,14 @@ class EmployeeServiceImpTest {
         assertThat(employeeDto.getId())
                 .isEqualTo(mockEmployee.getId());
 
+        assertThat(employeeDto.getName())
+                .isEqualTo(mockEmployee.getName());
+
         assertThat(employeeDto.getEmail())
                 .isEqualTo(mockEmployee.getEmail());
+
+        assertThat(employeeDto.getSalary())
+                .isEqualTo(mockEmployee.getSalary());
 
         // Verify
         verify(employeeRepository, times(1))
@@ -101,13 +108,34 @@ class EmployeeServiceImpTest {
                 .isEqualTo(mockEmployee.getEmail());
 
         assertThat(employeeDTO.getSalary())
-                .isEqualTo(mockEmployeeDTO.getSalary());
+                .isEqualTo(mockEmployee.getSalary());
 
-        // Verify
+        // Verify findByEmail()
         verify(employeeRepository, times(1))
                 .findByEmail(mockEmployeeDTO.getEmail());
 
+        // ArgumentCaptor
+        ArgumentCaptor<Employee> employeeCaptor =
+                ArgumentCaptor.forClass(Employee.class);
+
+        // Capture Employee passed to save()
         verify(employeeRepository, times(1))
-                .save(any(Employee.class));
+                .save(employeeCaptor.capture());
+
+        // Get captured Employee
+        Employee capturedEmployee =
+                employeeCaptor.getValue();
+
+        // Assert captured Employee
+        assertThat(capturedEmployee).isNotNull();
+
+        assertThat(capturedEmployee.getName())
+                .isEqualTo(mockEmployeeDTO.getName());
+
+        assertThat(capturedEmployee.getEmail())
+                .isEqualTo(mockEmployeeDTO.getEmail());
+
+        assertThat(capturedEmployee.getSalary())
+                .isEqualTo(mockEmployeeDTO.getSalary());
     }
 }
