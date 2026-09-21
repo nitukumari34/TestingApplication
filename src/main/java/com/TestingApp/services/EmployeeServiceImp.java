@@ -62,9 +62,9 @@ public class EmployeeServiceImp implements  EmployeeService{
             log.error("Attempted to update email with id : {}",id);
             throw  new RuntimeException("The email of the employee cannot be updated");
         }
-        employeeDTO.setId(null);
-        modelMapper.map(employeeDTO,Employee.class);
-        Employee savedEmployee=employeeRepository.save(employee);
+        employeeDTO.setId(id);
+        modelMapper.map(employeeDTO, employee);
+        Employee savedEmployee = employeeRepository.save(employee);
         log.info("Employee updated successfully with this id : {}",id);
         return modelMapper.map(savedEmployee,EmployeeDTO.class);
 
@@ -82,4 +82,5 @@ public class EmployeeServiceImp implements  EmployeeService{
         log.info("Successfully deleted employee with id :{}",id);
 
     }
+
 }

@@ -193,4 +193,24 @@ class EmployeeServiceImpTest {
                 verify(employeeRepository).findById(mockEmployeeDTO.getId());
                 verify(employeeRepository, never()).save(any());
         }
+    @Test
+    void testUpdateEmployee_whenValidEmployee_thenUpdateEmployee() {
+        // Arrange
+        when(employeeRepository.findById(mockEmployeeDTO.getId())).thenReturn(Optional.of(mockEmployee));
+        mockEmployeeDTO.setName("Random name");
+        mockEmployeeDTO.setSalary(199.0);
+
+        Employee newEmployee = modelMapper.map(mockEmployeeDTO, Employee.class);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(newEmployee);
+
+        // Act
+        EmployeeDTO updatedEmployeeDto = employeeService.updateEmployee(mockEmployeeDTO.getId(), mockEmployeeDTO);
+
+        // Assert
+        assertThat(updatedEmployeeDto).isEqualTo(mockEmployeeDTO);
+
+        // Verify
+        verify(employeeRepository).findById(mockEmployeeDTO.getId());
+        verify(employeeRepository).save(any(Employee.class));
+    }
 }
