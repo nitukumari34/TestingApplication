@@ -153,4 +153,20 @@ class EmployeeServiceImpTest {
         assertThat(capturedEmployee.getSalary())
                 .isEqualTo(mockEmployeeDTO.getSalary());
     }
+
+    @Test
+    void testCreateNewEmployee_whenAttemptingToCreateNewEmployeeWithExistingEmail_thenThrowException() {
+        // Arrange
+        when(employeeRepository.findByEmail(mockEmployeeDTO.getEmail()))
+                .thenReturn(List.of(mockEmployee));
+
+        // Act & Assert
+        assertThatThrownBy(() -> employeeService.createNewEmployee(mockEmployeeDTO))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Employee already exist with email: " + mockEmployeeDTO.getEmail());
+
+        // Verify
+        verify(employeeRepository, times(1)).findByEmail(mockEmployeeDTO.getEmail());
+        verify(employeeRepository, never()).save(any());
+    }
 }
