@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
@@ -212,5 +213,34 @@ class EmployeeServiceImpTest {
         // Verify
         verify(employeeRepository).findById(mockEmployeeDTO.getId());
         verify(employeeRepository).save(any(Employee.class));
+    }
+
+    @Test
+    void testDeleteEmployee_whenEmployeeDoesNotExists_thenThrowException() {
+        // Arrange
+        when(employeeRepository.existsById(1L)).thenReturn(false);
+
+        // Act & Assert
+        assertThatThrownBy(() -> employeeService.deleteEmployee(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Employee not found with id : 1");
+
+        // Verify
+        verify(employeeRepository).existsById(1L);
+        verify(employeeRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void testDeleteEmployee_whenEmployeeIsValid_thenDeleteEmployee() {
+        // Arrange
+        when(employeeRepository.existsById(1L)).thenReturn(true);
+
+        // Act & Assert
+        assertThatCode(() -> employeeService.deleteEmployee(1L))
+                .doesNotThrowAnyException();
+
+        // Verify
+        verify(employeeRepository).existsById(1L);
+        verify(employeeRepository, times(1)).deleteById(1L);
     }
 }
