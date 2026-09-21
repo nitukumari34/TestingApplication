@@ -169,4 +169,17 @@ class EmployeeServiceImpTest {
         verify(employeeRepository, times(1)).findByEmail(mockEmployeeDTO.getEmail());
         verify(employeeRepository, never()).save(any());
     }
+    @Test
+    void testUpdateEmployee_whenEmployeeDoesNotExists_thenThrowException(){
+//      arrange
+        assertThatThrownBy(()-> employeeService.updateEmployee(1L,mockEmployeeDTO)
+
+                )
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Employee not found with id : 1");
+        //verify
+        verify(employeeRepository).findById(1L);
+        verify(employeeRepository,never()).save(any());
+    }
+
 }
