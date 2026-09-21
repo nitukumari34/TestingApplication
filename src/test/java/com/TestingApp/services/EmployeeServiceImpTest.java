@@ -2,6 +2,7 @@ package com.TestingApp.services;
 
 import com.TestingApp.dto.EmployeeDTO;
 import com.TestingApp.entities.Employee;
+import com.TestingApp.exceptions.ResourceNotFoundException;
 import com.TestingApp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,6 +81,19 @@ class EmployeeServiceImpTest {
         // Verify
         verify(employeeRepository, times(1))
                 .findById(id);
+    }
+    @Test
+    void testGetEmployeeById_whenEmployeeIsNotPresent_thenThrowException() {
+        // Arrange
+        when(employeeRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThatThrownBy(() -> employeeService.getEmployeeById(1L))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Employee not found with id : 1");
+
+        // Verify
+        verify(employeeRepository, times(1)).findById(1L);
     }
 
     @Test
