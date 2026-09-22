@@ -32,7 +32,6 @@ private final EmployeeService employeeService;
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id){
         employeeService.deleteEmployee(id);
-        return  ResponseEntity.notFound().build();
-
+        return ResponseEntity.noContent().build();
     }
 }
