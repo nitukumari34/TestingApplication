@@ -24,7 +24,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
         Employee savedEmployee = employeeRepository.save(testEmployee);
 
         webTestClient.get()
-                .uri("/{id}", savedEmployee.getId())
+                .uri("/api/employees/{id}", savedEmployee.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -35,7 +35,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
     @Test
     void testGetEmployeeById_Failure() {
         webTestClient.get()
-                .uri("/999")
+                .uri("/api/employees/999")
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -45,7 +45,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
         employeeRepository.save(testEmployee);
 
         webTestClient.post()
-                .uri("")
+                .uri("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testEmployeeDto)
                 .exchange()
@@ -55,7 +55,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
     @Test
     void testCreateNewEmployee_whenEmployeeDoesNotExists_thenCreateEmployee() {
         webTestClient.post()
-                .uri("")
+                .uri("/api/employees")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testEmployeeDto)
                 .exchange()
@@ -68,7 +68,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
     @Test
     void testUpdateEmployee_whenEmployeeDoesNotExists_thenThrowException() {
         webTestClient.put()
-                .uri("/999")
+                .uri("/api/employees/999")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testEmployeeDto)
                 .exchange()
@@ -82,7 +82,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
         testEmployeeDto.setEmail("random@gmail.com");
 
         webTestClient.put()
-                .uri("/{id}", savedEmployee.getId())
+                .uri("/api/employees/{id}", savedEmployee.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(testEmployeeDto)
                 .exchange()
@@ -111,7 +111,7 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
     @Test
     void testDeleteEmployee_whenEmployeeDoesNotExists_thenThrowException() {
         webTestClient.delete()
-                .uri("/999")
+                .uri("/api/employees/999")
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -122,13 +122,13 @@ class EmployeeControllerTestIT extends AbstractIntegrationTest {
 
         // First delete — should succeed with 204
         webTestClient.delete()
-                .uri("/{id}", savedEmployee.getId())
+                .uri("/api/employees/{id}", savedEmployee.getId())
                 .exchange()
                 .expectStatus().isNoContent();
 
         // Second delete — employee gone, should return 404
         webTestClient.delete()
-                .uri("/{id}", savedEmployee.getId())
+                .uri("/api/employees/{id}", savedEmployee.getId())
                 .exchange()
                 .expectStatus().isNotFound();
     }

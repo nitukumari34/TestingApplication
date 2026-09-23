@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+    //@RequestMapping("/api")
+@RequestMapping("/api/employees")
 public class EmployeeController {
 private final EmployeeService employeeService;
 
