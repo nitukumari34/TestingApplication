@@ -1,9 +1,10 @@
-package com.TestingApp.services;
+package com.TestingApp.services.Impl;
 
 import com.TestingApp.dto.EmployeeDTO;
 import com.TestingApp.entities.Employee;
 import com.TestingApp.exceptions.ResourceNotFoundException;
 import com.TestingApp.repositories.EmployeeRepository;
+import com.TestingApp.services.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class EmployeeServiceImp implements  EmployeeService{
+public class EmployeeServiceImp implements EmployeeService {
     private  final EmployeeRepository employeeRepository;
     private  final ModelMapper modelMapper;
 
